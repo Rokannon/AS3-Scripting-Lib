@@ -11,16 +11,30 @@ Example (assuming scriptinglib.swc is in your Flex classpath)
 
 {{{
 
-import com.newgonzo.scripting.ICompiler;
-import com.newgonzo.scripting.events.CompilerEvent;
-import com.newgonzo.scripting.ecma.ESCompiler;
-
-var compiler:ICompiler = new ESCompiler();
-compiler.addEventListener(CompilerEvent.INIT, compilerInit);
-
-function compilerInit(event:CompilerEvent):void
-{
-  compiler.compileAndLoad("trace('Hello, World!');");
-}
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="creationComplete();">
+	<mx:Script>
+		<![CDATA[
+		
+			import com.newgonzo.scripting.ICompiler;
+			import com.newgonzo.scripting.events.CompilerEvent;
+			import com.newgonzo.scripting.ecma.ESCompiler;
+			
+			private var compiler:ICompiler;
+			
+			private function creationComplete():void
+			{
+				compiler = new ESCompiler();
+				compiler.addEventListener(CompilerEvent.INIT, compilerInit);
+			}
+				
+			private function compilerInit(event:CompilerEvent):void
+			{
+			  compiler.compileAndLoad("trace('Hello, World!');");
+			}
+			
+		]]>
+	</mx:Script>
+</mx:Application>
 
 }}}
