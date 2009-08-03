@@ -3,7 +3,7 @@
 
 = Introduction =
 
-The scripting lib can be used within Flash CS3 by loading the special ESCompilerSWF provided in the download zip. Its document class is an instance of ICompiler.
+The scripting lib can be used within Flash CS3 by loading the special ESCompilerSWF provided in the download zip. Its document class is an instance of `ICompiler`.
 
 
 = Details =
