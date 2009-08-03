@@ -1,0 +1,26 @@
+#summary Instructions for use within Flex projects
+#labels Featured,Phase-Implementation
+
+= Introduction =
+
+The scripting lib can be used in Flex projects by referencing the library SWC or loading the ESCompilerSWF the same way FlashCS3 projects have to.
+
+= Details =
+
+Example (assuming scriptinglib.swc is in your Flex classpath)
+
+{{{
+
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.events.CompilerEvent;
+import com.newgonzo.scripting.ecma.ESCompiler;
+
+var compiler:ICompiler = new ESCompiler();
+compiler.addEventListener(CompilerEvent.INIT, compilerInit);
+
+function compilerInit(event:CompilerEvent):void
+{
+  compiler.compileAndLoad("trace('Hello, World!');");
+}
+
+}}}
