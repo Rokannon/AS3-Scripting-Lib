@@ -3,11 +3,11 @@
 
 = Introduction =
 
-Compiler errors and runtime errors are reported via events. ICompiler dispatches CompilerErrorEvents for compiler errors and IScript dispatches ScriptErrorEvent for runtime errors.
+Compiler errors and runtime errors are reported via events. `ICompiler` dispatches `CompilerErrorEvent`s for compiler errors and `IScript` dispatches `ScriptErrorEvent`s for runtime errors.
 
 = Details =
 
-Assuming an initialized instance of ICompiler already exists:
+Assuming an initialized instance of `ICompiler` already exists:
 
 Compile Error
 {{{
