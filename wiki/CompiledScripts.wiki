@@ -15,8 +15,6 @@ import com.newgonzo.scripting.ICompiler;
 import com.newgonzo.scripting.IScript;
 import com.newgonzo.scripting.ScriptContext;
 
-// assuming we want our script to run in the scope of some Date object
-var scope:Object = new Date();
 var source:String = "trace('Hello, World!');";
 
 var script:IScript = compiler.compile(source);
