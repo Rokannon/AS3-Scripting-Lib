@@ -1,0 +1,35 @@
+#summary Instructions for exposing classes and functions to executing scripts
+#labels Featured,Phase-Implementation
+
+= Introduction =
+
+Compiled scripts execute in their own ApplicationDomain with no ability to import package definitions. To make classes and functions available to the scripting domain, you must expose them via ScriptContext.exposeDefinition(), or by instantiating the ScriptContext with a pre-populated ScriptDomain object.
+
+= Details =
+
+Assuming an initialized instance of ICompiler already exists:
+
+{{{
+
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.ScriptContext;
+
+
+function printMessage(msg:String):void
+{
+  trace("MESSAGE: " + msg);
+}
+
+var context:ScriptContext = new ScriptContext();
+
+// expose printMessage as console.print
+context.exposeDefinition(printMessage, "console.print");
+
+var source:String = "console.print('Hello, World!');"
+
+compiler.compileAndLoad(source, context);
+
+// traces "MESSAGE: Hello, World!"
+
+
+}}}
