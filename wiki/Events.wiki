@@ -9,11 +9,11 @@ Compiler errors and runtime errors are reported via events. ICompiler dispatches
 
 Assuming an initialized instance of ICompiler already exists:
 
+Compile Error
 {{{
 
 import com.newgonzo.scripting.ICompiler;
 import com.newgonzo.scripting.IScript;
-import com.newgonzo.scripting.events.ScriptErrorEvent;
 import com.newgonzo.scripting.events.CompilerErrorEvent;
 
 // listen for compile errors
@@ -23,22 +23,38 @@ var invalid:String = "trace(";
 
 var script:IScript = compiler.compile(source);
 
+function compilerError(event:CompilerErrorEvent):void
+{
+  trace("COMPILER ERROR: " + event);
+}
+
+// traces "COMPILER ERROR: [CompilerErrorEvent(error=CompilerError: ESCompiler:1: String or identifier required, found rightbrace)]"
+
+}}}
+
+
+Runtime Error
+{{{
+
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.IScript;
+import com.newgonzo.scripting.events.ScriptErrorEvent;
+
+var invalid:String = "trace(invalid);";
+
+var script:IScript = compiler.compile(source);
+
 script.addEventListener(ScriptErrorEvent.SCRIPT_ERROR, scriptError);
 
 // run the script
 script.load();
 
 
-function compilerError(event:CompilerErrorEvent):void
-{
-  trace("COMPILER ERROR: " + event);
-}
-
 function scriptError(event:ScriptErrorEvent):void
 {
   trace("RUNTIME ERROR: " + event);
 }
 
-// traces "COMPILER ERROR: CompilerError: ESCompiler:1: String or identifier required, found rightbrace"
+// traces "RUNTIME ERROR: [ScriptErrorEvent(error=ScriptError: Error #1065: Variable invalid is not defined.)]"
 
 }}}
