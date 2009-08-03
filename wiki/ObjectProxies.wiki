@@ -7,7 +7,7 @@ Object proxies are an attempt at managing references made between executing scri
 
 Object proxies are not complete and may end up causing trouble. For instance, since using object proxies causes the scope object and any object referenced off of it to be instances of ESObject, certain language features may not work properly (such as "is" or "instanceof").
 
-Proxied objects can be identified in their toString() output by the triple curly braces wrapped around the proxied object's normal output (ex. "{{{[object Object]}}}").
+Proxied objects can be identified in their `toString()` output by the triple curly braces wrapped around the proxied object's normal output (ex. "`{{{[object Object]}}}`").
 
 The flag for using object proxies is the second argument of the ScriptContext constructor. Set to false by default, though that may change as the feature becomes more mature in the interest of better reference management.
 
