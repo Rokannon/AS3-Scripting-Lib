@@ -3,11 +3,11 @@
 
 = Introduction =
 
-Compiled scripts can be referenced and reused much faster than recompiling. Both ICompiler.compile() and ICompiler.compileAndLoad() return an instance of IScript that can be used to re-execute the compiled code.
+Compiled scripts can be referenced and reused much faster than recompiling. Both `ICompiler.compile()` and `ICompiler.compileAndLoad()` return an instance of `IScript` that can be used to re-execute the compiled code.
 
 = Details =
 
-Assuming an initialized instance of ICompiler already exists:
+Assuming an initialized instance of `ICompiler` already exists:
 
 {{{
 
