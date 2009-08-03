@@ -3,11 +3,11 @@
 
 = Introduction =
 
-Compiled scripts execute in their own ApplicationDomain with no ability to import package definitions. To make classes and functions available to the scripting domain, you must expose them via ScriptContext.exposeDefinition(), or by instantiating the ScriptContext with a pre-populated ScriptDomain object.
+Compiled scripts execute in their own `ApplicationDomain` with no ability to import package definitions. To make classes and functions available to the scripting domain, you must expose them via `ScriptContext.exposeDefinition()`, or by instantiating the `ScriptContext` with a pre-populated `ScriptDomain` object.
 
 = Details =
 
-Assuming an initialized instance of ICompiler already exists:
+Assuming an initialized instance of `ICompiler` already exists:
 
 Exposing a local function:
 {{{
