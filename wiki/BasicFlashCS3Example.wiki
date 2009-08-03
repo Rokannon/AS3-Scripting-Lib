@@ -1,0 +1,26 @@
+#summary Instructions for use within Flash CS3
+
+= Introduction =
+
+The scripting lib can be used within Flash CS3 by loading the special ESCompilerSWF provided in the download zip. Its document class is an instance of ICompiler.
+
+
+= Details =
+
+{{{
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.events.CompilerEvent;
+import com.newgonzo.scripting.utils.CompilerLoader;
+
+var loader:CompilerLoader = new CompilerLoader();
+loader.addEventListener(CompilerEvent.INIT, compilerInit);
+loader.load("ESCompilerSWF.swf");
+
+function compilerInit(event:CompilerEvent):void
+{
+  var compiler:ICompiler = event.compiler;
+  
+  compiler.compileAndRun("trace('Hello World!');");
+}
+
+}}}
