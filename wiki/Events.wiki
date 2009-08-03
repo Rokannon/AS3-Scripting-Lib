@@ -1,0 +1,44 @@
+#summary Instructions for using events
+#labels Featured,Phase-Implementation
+
+= Introduction =
+
+Compiler errors and runtime errors are reported via events. ICompiler dispatches CompilerErrorEvents for compiler errors and IScript dispatches ScriptErrorEvent for runtime errors.
+
+= Details =
+
+Assuming an initialized instance of ICompiler already exists:
+
+{{{
+
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.IScript;
+import com.newgonzo.scripting.events.ScriptErrorEvent;
+import com.newgonzo.scripting.events.CompilerErrorEvent;
+
+// listen for compile errors
+compiler.addEventListener(CompilerErrorEvent.COMPILER_ERROR, compilerError);
+
+var invalid:String = "trace(";
+
+var script:IScript = compiler.compile(source);
+
+script.addEventListener(ScriptErrorEvent.SCRIPT_ERROR, scriptError);
+
+// run the script
+script.load();
+
+
+function compilerError(event:CompilerErrorEvent):void
+{
+  trace("COMPILER ERROR: " + event);
+}
+
+function scriptError(event:ScriptErrorEvent):void
+{
+  trace("RUNTIME ERROR: " + event);
+}
+
+// traces "COMPILER ERROR: CompilerError: ESCompiler:1: String or identifier required, found rightbrace"
+
+}}}
