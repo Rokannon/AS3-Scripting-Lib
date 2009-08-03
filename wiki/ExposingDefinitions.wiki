@@ -9,6 +9,7 @@ Compiled scripts execute in their own ApplicationDomain with no ability to impor
 
 Assuming an initialized instance of ICompiler already exists:
 
+Exposing a local function:
 {{{
 
 import com.newgonzo.scripting.ICompiler;
@@ -30,6 +31,27 @@ var source:String = "console.print('Hello, World!');"
 compiler.compileAndLoad(source, context);
 
 // traces "MESSAGE: Hello, World!"
+
+
+}}}
+
+Exposing a class:
+{{{
+
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.ScriptContext;
+import flash.utils.Dictionary;
+
+var context:ScriptContext = new ScriptContext();
+
+// expose Dictionary
+context.exposeDefinition(Dictionary, "flash.utils.Dictionary");
+
+var source:String = "var dict = new flash.utils.Dictionary(); trace(dict);"
+
+compiler.compileAndLoad(source, context);
+
+// traces "[object Dictionary]"
 
 
 }}}
