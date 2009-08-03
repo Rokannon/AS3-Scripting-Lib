@@ -20,7 +20,7 @@ function compilerInit(event:CompilerEvent):void
 {
   var compiler:ICompiler = event.compiler;
   
-  compiler.compileAndRun("trace('Hello World!');");
+  compiler.compileAndLoad("trace('Hello World!');");
 }
 
 }}}
