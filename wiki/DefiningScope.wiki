@@ -3,7 +3,7 @@
 
 = Introduction =
 
-By default, scripts run in scope of the global object. Often, it's desirable to have scripts run in the scope of a different object. For instance, browsers run JavaScript in the scope of the DOM's Window object.
+By default, scripts run in scope of the global object. Often, it's desirable to have scripts run in the scope of a different object. For instance, browsers run !JavaScript in the scope of the DOM's Window object.
 
 = Details =
 
