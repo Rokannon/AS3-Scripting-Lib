@@ -55,3 +55,23 @@ compiler.compileAndLoad(source, context);
 
 
 }}}
+
+Packages can also be "imported" using `with`:
+
+AS3:
+{{{
+context.exposeDefinition(Dictionary, "flash.utils.Dictionary");
+context.exposeDefinition(trace, "console.print");
+}}}
+
+Script:
+{{{
+
+with(flash.utils)
+with(console)
+{
+  var dict = new Dictionary();
+  print(dict); // traces [object Dictionary]
+}
+
+}}}
