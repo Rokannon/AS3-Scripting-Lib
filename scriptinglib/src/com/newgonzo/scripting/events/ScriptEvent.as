@@ -6,9 +6,7 @@ package com.newgonzo.scripting.events
 
     public class ScriptEvent extends Event
     {
-        public static const LOAD:String = "scriptRun";
-        public static const START:String = "scriptStart";
-        public static const COMPLETE:String = "scriptComplete";
+        public static const LOAD:String = "scriptLoad";
         public static const UNLOAD:String = "scriptUnload";
 
         public function ScriptEvent(type:String)

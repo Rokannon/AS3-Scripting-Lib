@@ -198,13 +198,9 @@ package com.newgonzo.scripting.ecma
         {
             try
             {
-                dispatchEvent(new ScriptEvent(ScriptEvent.START));
-
                 helperArray[0] = scope;
                 helperArray[1] = scriptContext.domain;
                 scriptFunction.apply(scope, helperArray);
-
-                dispatchEvent(new ScriptEvent(ScriptEvent.COMPLETE));
             }
             catch (e:Error)
             {
