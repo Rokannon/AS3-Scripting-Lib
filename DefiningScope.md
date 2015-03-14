@@ -1,0 +1,25 @@
+# Introduction #
+
+By default, scripts run in scope of the global object. Often, it's desirable to have scripts run in the scope of a different object. For instance, browsers run JavaScript in the scope of the DOM's Window object.
+
+# Details #
+
+The scope for a script can be defined using a `ScriptContext` object as the second argument of calls to `ICompiler.compile()` and `ICompiler.compileAndLoad()`. The first argument of the `ScriptContext` constructor is a reference to the desired scope object. The second argument determines whether object proxies should be used (true by default, false for this example).
+
+Assuming an instance of an initialized `ICompiler` already exists (Flash or Flex):
+
+```
+import com.newgonzo.scripting.ICompiler;
+import com.newgonzo.scripting.ScriptContext;
+
+// assuming we want our script to run in the scope of some Date object
+var scope:Object = new Date();
+var script:String = "trace(this);";
+var context:ScriptContext = new ScriptContext(scope, false);
+
+compiler.compileAndLoad(script, context);
+
+// traces "[object Date]"
+
+
+```
