@@ -26,6 +26,8 @@ package com.newgonzo.scripting.ecma
             return this;
         })();
 
+        private const helperArray:Array = [];
+
         private var isLoaded:Boolean = false;
 
         private var scriptId:String;
@@ -198,7 +200,9 @@ package com.newgonzo.scripting.ecma
             {
                 dispatchEvent(new ScriptEvent(ScriptEvent.START));
 
-                scriptFunction.apply(scope, [scope, scriptContext.domain]);
+                helperArray[0] = scope;
+                helperArray[1] = scriptContext.domain;
+                scriptFunction.apply(scope, helperArray);
 
                 dispatchEvent(new ScriptEvent(ScriptEvent.COMPLETE));
             }
