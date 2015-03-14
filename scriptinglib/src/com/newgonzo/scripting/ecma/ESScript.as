@@ -86,12 +86,6 @@ package com.newgonzo.scripting.ecma
         {
             try
             {
-                if (isLoaded)
-                {
-                    runScript();
-                    return;
-                }
-
                 unload();
 
                 // re-create object proxy table
@@ -194,6 +188,12 @@ package com.newgonzo.scripting.ecma
             throw new ReferenceError("Definition for \"" + name + "\" not found.");
         }
 
+        public function run():void
+        {
+            if (isLoaded)
+                runScript();
+        }
+
         protected function runScript():void
         {
             try
@@ -219,7 +219,6 @@ package com.newgonzo.scripting.ecma
                 scriptFunction = getDefinition(id) as Function;
                 isLoaded = true;
                 dispatchEvent(new ScriptEvent(ScriptEvent.LOAD));
-                runScript();
             }
             catch (e:Error)
             {

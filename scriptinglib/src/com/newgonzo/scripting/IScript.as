@@ -20,5 +20,7 @@ package com.newgonzo.scripting
         function load():void
 
         function unload():void
+
+        function run():void
     }
 }
