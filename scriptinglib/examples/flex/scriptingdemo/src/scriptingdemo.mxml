@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="creationComplete();" xmlns:local="*">
+	
+	<mx:Style source="scriptingdemo.css"/>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.newgonzo.scripting.events.ScriptErrorEvent;
+			import mx.events.CloseEvent;
+			import mx.controls.Alert;
+			import com.newgonzo.scripting.events.ScriptEvent;
+			import com.newgonzo.scripting.errors.CompilerError;
+			
+			import flash.utils.getDefinitionByName;
+			import flash.utils.describeType;
+			import flash.net.navigateToURL;
+			
+			import com.newgonzo.scripting.ScriptDomain;
+			import com.newgonzo.scripting.ScriptContext;
+			import com.newgonzo.scripting.IScript;
+			import com.newgonzo.scripting.events.CompilerEvent;
+			import com.newgonzo.scripting.ecma.ESCompiler;
+		
+			import mx.events.ItemClickEvent;
+			import mx.collections.ArrayCollection;
+			
+			[Bindable] public var compiler:ESCompiler = new ESCompiler();
+			[Bindable] public var script:IScript;
+			
+			[Bindable] public var compilerReady:Boolean = false;
+			[Bindable] public var needsCompiling:Boolean = false;
+			
+			[Bindable] public var packages:XMLList;
+			[Bindable] public var exposedTypes:ArrayCollection;
+			
+			[Bindable] public var examples:XMLList;
+			
+			[Bindable] public var scriptLoading:Boolean = false;
+			
+			[Bindable] public var errors:ArrayCollection;
+			
+			private var scriptLoader:URLLoader;
+			private var scriptEdited:Boolean = false;
+			
+			private var context:ScriptContext;
+			private var scriptDomain:ScriptDomain;
+			
+			private var loader:URLLoader;
+			private var xml:XML;
+			
+			private function creationComplete():void
+			{
+				loader = new URLLoader(new URLRequest("data.xml"));
+				loader.addEventListener(Event.COMPLETE, loadComplete);
+			}
+			
+			private function loadComplete(event:Event):void
+			{
+				xml = new XML(loader.data);
+				packages = xml.packages.elements("package");
+				
+				//packsTree.dataProvider = packages;
+				//packsTree.openItems = packages;
+				
+				examples = xml.examples.elements("example");
+				examplesList.dataProvider = examples;
+				
+				compilerReady = compiler.initialized;
+				
+				scriptDomain = new ScriptDomain(ApplicationDomain.currentDomain);
+				addDefaultDefinitions();
+				
+				exposedTypes = new ArrayCollection();
+				errors = new ArrayCollection();
+				
+				if(!compilerReady)
+				{
+					compiler.addEventListener(CompilerEvent.INIT, compilerInitialized);
+				}
+				
+				updateContext();
+				updateDefinitions();
+			}
+			
+			protected function addDefaultDefinitions():void
+			{
+				// add default defs
+				scriptDomain.addDefinition(print, "console.print");
+				scriptDomain.addDefinition(clear, "console.clear");
+			}
+			
+			protected function compileAndLoadCode():void
+			{
+				if(clearBeforeCompile.selected)
+				{
+					clear();
+				}
+				
+				updateContext();
+				
+				try
+				{
+					errors = new ArrayCollection();
+					script = null;
+					script = compiler.compileAndLoad(code.text, context);
+					script.addEventListener(ScriptErrorEvent.SCRIPT_ERROR, scriptError, false, 0, true);
+					needsCompiling = false;
+				}
+				catch(error:CompilerError)
+				{
+					errors.addItem(error);
+					showErrorTab();
+				}
+			}
+			
+			protected function runScript():void
+			{
+				if(script)
+				{
+					if(clearBeforeRun.selected)
+					{
+						clear();
+					}
+					
+					errors = new ArrayCollection();
+					script.load();
+				}
+			}
+			
+			protected function unloadScript():void
+			{
+				if(script)
+				{
+					script.unload();
+					script = null;
+				}
+			}
+			
+			protected function updateContext():void
+			{
+				var thisObj:Object = scope.selected ? stage : null;
+				var useProxies:Boolean = proxy.selected;
+				
+				context = new ScriptContext(thisObj, useProxies, scriptDomain);
+			}
+			
+			protected function updateDefinitions():void
+			{
+				exposedTypes.source = scriptDomain.definitionNames;
+			}
+			
+			protected function clear():void
+			{
+				console.text = "";
+			}
+			
+			protected function print(text:String):void
+			{
+				console.text += text + "\n";
+				console.verticalScrollPosition = console.maxVerticalScrollPosition;
+				showConsoleTab();
+			}
+			
+			protected function showErrorTab():void
+			{
+				tabs.selectedIndex = 1;
+			}
+			
+			protected function showConsoleTab():void
+			{
+				if(!errors.length)
+				{
+					tabs.selectedIndex = 0;
+				}
+			}
+			
+			protected function edited():void
+			{
+				needsCompiling = true;
+				scriptEdited = true;
+			}
+			
+			private function removeTypes(types:Array):void
+			{
+				var type:String;
+				
+				for each(type in types)
+				{
+					scriptDomain.removeDefinitionByName(type);
+				}
+				
+				updateDefinitions();
+			}
+			
+			private function exposeType(type:XML):void
+			{
+				var typeName:String = type.@name;
+				var parent:XML = type.parent();
+				
+				while(parent && parent.localName() == "package")
+				{
+					typeName = parent.@name + "." + typeName;
+					parent = parent.parent();
+				}
+				
+				addExposedType(typeName);
+			}
+			
+			private function addExposedType(typeName:String):void
+			{
+				scriptDomain.addDefinition(getDefinitionByName(typeName), typeName);
+			}
+			
+			private function exposeDefinition(def:XML):void
+			{
+				if(def.localName() == "package")
+				{
+					exposePackage(def);
+				}
+				else
+				{
+					exposeType(def);
+				}
+				
+				updateDefinitions();
+			}
+			
+			private function exposePackage(pack:XML):void
+			{
+				var types:XMLList = pack.descendants("type");
+				var type:XML;
+				
+				for each(type in types)
+				{
+					exposeType(type);
+				}
+			}
+			
+			private function selectExample():void
+			{
+				// warn user if they've edited the script area
+				if(scriptEdited)
+				{
+					Alert.show("Choosing this example will replace the content of the editable script area. Proceed?", "Script Edited", Alert.CANCEL|Alert.OK, this, warningClosed);
+				}
+				else
+				{
+					doSelectExample();
+				}
+			}
+			
+			private function warningClosed(event:CloseEvent):void
+			{
+				if(event.detail == Alert.OK)
+				{
+					doSelectExample();
+				}
+			}
+			
+			private function doSelectExample():void
+			{
+				scriptEdited = false;
+				var item:XML = examplesList.selectedItem as XML;
+				
+				clear();
+				unloadScript();
+				scriptDomain.removeAllDefinitions();
+				addDefaultDefinitions();
+				
+				scriptLoading = true;
+				loadScript(item.script.@src);
+				
+				var typeName:String;
+				var exposed:XML;
+				var exposedList:XMLList = item.expose;
+				
+				for each(exposed in exposedList)
+				{
+					addExposedType(exposed.@type);
+				}
+				
+				description.htmlText = "<p><b><font size='+2'>" + item.@name + "</font></b></p><br/>" + item.description.text();
+				updateDefinitions();
+			}
+			
+			
+			private function loadScript(src:String):void
+			{
+				if(scriptLoader)
+				{
+					scriptLoader.removeEventListener(Event.COMPLETE, scriptLoadComplete);
+				}
+				
+				scriptLoader = new URLLoader(new URLRequest(src));
+				scriptLoader.addEventListener(Event.COMPLETE, scriptLoadComplete);
+			}
+			
+			private function scriptLoadComplete(event:Event):void
+			{
+				code.text = scriptLoader.data;
+				code.verticalScrollPosition = 0;
+				scriptLoading = false;
+				needsCompiling = true;
+			}
+			
+			private function contextChanged(event:Event):void
+			{
+				unloadScript();
+			}
+			
+			private function compilerInitialized(event:CompilerEvent):void
+			{
+				compilerReady = compiler.initialized;
+			}
+			
+			private function scriptError(event:ScriptErrorEvent):void
+			{
+				errors.addItem(event.error);
+				showErrorTab();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:HBox width="100%" height="100%">
+		<mx:Panel width="250" height="100%" title="Example Scripts">
+			<mx:List id="examplesList" width="100%" height="100%" labelField="@name" change="selectExample();"/>
+			<mx:TextArea editable="false" id="description" width="100%" height="100%"/>
+		</mx:Panel>
+		<mx:VDividedBox width="100%" height="100%">
+			<mx:HBox width="100%" height="70%">
+				<mx:Panel width="100%" height="100%" title="Script (editable)" status="{scriptLoading ? 'Loading...' : ''}">
+					<local:TextAreaExtended id="code" styleName="scriptTextArea" width="100%" height="100%" change="edited();"/>
+					<mx:ControlBar>
+						<mx:CheckBox id="scope" label="Use stage for scope (this)" change="contextChanged(event);" selected="true" toolTip="If selected, the stage will be used as the scope object (this) of the current script."/>
+						<mx:CheckBox id="proxy" label="Use object proxies" change="contextChanged(event);" selected="true" toolTip="If selected, objects referenced by the executing script will be wrapped by an instance of ESObject to aide in reference/memory management."/>
+						<mx:Spacer width="100%"/>
+						<mx:Button label="Compile and Run" id="compileRun" enabled="{compilerReady}" styleName="{needsCompiling ? 'promptButton' : null}" click="compileAndLoadCode();" toolTip="Compiles and runs the script."/>
+						<mx:Button label="Run Again" id="run" enabled="{script != null}" click="runScript();" toolTip="Re-executes the compiled script."/>
+					</mx:ControlBar>
+				</mx:Panel>
+				<mx:Panel width="250" height="100%" title="Classes/Functions in Script Domain">
+					<mx:List id="typesList" allowMultipleSelection="false" selectable="false" width="100%" height="100%" dataProvider="{exposedTypes}"/>
+					<!--<mx:ControlBar>
+						<mx:Button label="Remove" enabled="{typesList.selectedItem != null}" click="removeTypes(typesList.selectedItems);" toolTip="Removes the selected type from the types available to the executing script."/>
+					</mx:ControlBar>-->
+				</mx:Panel>
+			</mx:HBox>
+			
+			<mx:TabNavigator id="tabs" width="100%" height="30%" styleName="panelTabs">
+				<mx:Panel width="100%" height="100%" label="Console" styleName="tabbedPanel">
+					<mx:TextArea id="console" styleName="consoleTextArea" width="100%" height="100%" editable="false"/>
+					<mx:ControlBar>
+						<mx:Button label="Clear" click="clear();" toolTip="Clears the console output"/>
+						<mx:CheckBox id="clearBeforeCompile" label="Clear before every compile" toolTip="If checked, the console will be cleared before every compile." selected="true"/>
+						<mx:CheckBox id="clearBeforeRun" label="Clear before every run" toolTip="If checked, the console will be cleared before every run."/>
+					</mx:ControlBar>
+				</mx:Panel>
+				<mx:Panel width="100%" height="100%" label="Errors" styleName="tabbedPanel">
+					<mx:DataGrid id="errorGrid" styleName="errorGrid" width="100%" height="100%" dataProvider="{errors}">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Type" dataField="name" width="100"/>
+							<mx:DataGridColumn headerText="Message" dataField="message"/>
+							<mx:DataGridColumn headerText="Line" dataField="line" width="50"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:Panel>
+			</mx:TabNavigator>
+			
+		</mx:VDividedBox>
+	</mx:HBox>
+	<mx:LinkButton fontSize="10" id="mem" click="System.gc();" toolTip="Click to run garbage collector (debug player only)" render="mem.label = 'Memory used: ' + Math.round((System.totalMemory / 1024 / 1024) * 100) / 100 + ' MB'"/>
+</mx:Application>

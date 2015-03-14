@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<demo>
+	<packages>
+		<package name="flash">
+			<package name="display">
+				<type name="ActionScriptVersion"/>
+				<type name="AVM1Movie"/>
+				<type name="Bitmap"/>
+				<type name="BitmapData"/>
+				<type name="BitmapDataChannel"/>
+				<type name="BlendMode"/>
+				<type name="CapsStyle"/>
+				<type name="DisplayObject"/>
+				<type name="DisplayObjectContainer"/>
+				<type name="FrameLabel"/>
+				<type name="GradientType"/>
+				<type name="Graphics"/>
+				<type name="InteractiveObject"/>
+				<type name="InterpolationMethod"/>
+				<type name="JointStyle"/>
+				<type name="LineScaleMode"/>
+				<type name="Loader"/>
+				<type name="LoaderInfo"/>
+				<type name="MorphShape"/>
+				<type name="MovieClip"/>
+				<type name="PixelSnapping"/>
+				<type name="Scene"/>
+				<type name="Shape"/>
+				<type name="SimpleButton"/>
+				<type name="SpreadMethod"/>
+				<type name="Sprite"/>
+				<type name="Stage"/>
+				<type name="StageAlign"/>
+				<type name="StageDisplayState"/>
+				<type name="StageQuality"/>
+				<type name="StageScaleMode"/>
+				<type name="SWFVersion"/>
+			</package>
+			<package name="events">
+				<type name="ActivityEvent"/>
+				<type name="AsyncErrorEvent"/>
+				<type name="ContextMenuEvent"/>
+				<type name="DataEvent"/>
+				<type name="ErrorEvent"/>
+				<type name="Event"/>
+				<type name="EventDispatcher"/>
+				<type name="EventPhase"/>
+				<type name="FocusEvent"/>
+				<type name="FullScreenEvent"/>
+				<type name="HTTPStatusEvent"/>
+				<type name="IMEEvent"/>
+				<type name="IOErrorEvent"/>
+				<type name="KeyboardEvent"/>
+				<type name="MouseEvent"/>
+				<type name="NetStatusEvent"/>
+				<type name="ProgressEvent"/>
+				<type name="SecurityErrorEvent"/>
+				<type name="StatusEvent"/>
+				<type name="SyncEvent"/>
+				<type name="TextEvent"/>
+				<type name="TimerEvent"/>
+			</package>
+			<package name="filters">
+				<type name="BevelFilter"/>
+				<type name="BitmapFilter"/>
+				<type name="BitmapFilterQuality"/>
+				<type name="BitmapFilterType"/>
+				<type name="BlurFilter"/>
+				<type name="ColorMatrixFilter"/>
+				<type name="ConvolutionFilter"/>
+				<type name="DisplacementMapFilter"/>
+				<type name="DisplacementMapFilterMode"/>
+				<type name="DropShadowFilter"/>
+				<type name="GlowFilter"/>
+				<type name="GradientBevelFilter"/>
+				<type name="GradientGlowFilter"/>
+			</package>
+			<package name="geom">
+				<type name="ColorTransform"/>
+				<type name="Matrix"/>
+				<type name="Point"/>
+				<type name="Rectangle"/>
+				<type name="Transform"/>
+			</package>
+			<package name="text">
+				<type name="AntiAliasType"/>
+				<type name="CSMSettings"/>
+				<type name="Font"/>
+				<type name="FontStyle"/>
+				<type name="FontType"/>
+				<type name="GridFitType"/>
+				<type name="StaticText"/>
+				<type name="StyleSheet"/>
+				<type name="TextColorType"/>
+				<type name="TextDisplayMode"/>
+				<type name="TextField"/>
+				<type name="TextFieldAutoSize"/>
+				<type name="TextFieldType"/>
+				<type name="TextFormat"/>
+				<type name="TextFormatAlign"/>
+				<type name="TextLineMetrics"/>
+				<type name="TextRenderer"/>
+				<type name="TextSnapshot"/>
+			</package>
+			<package name="net">
+				<type name="getClassByAlias"/>
+				<type name="navigateToURL"/>
+				<type name="registerClassAlias"/>
+				<type name="sendToURL"/>
+				
+				<type name="FileFilter"/>
+				<type name="FileReference"/>
+				<type name="FileReferenceList"/>
+				<type name="LocalConnection"/>
+				<type name="NetConnection"/>
+				<type name="NetStream"/>
+				<type name="ObjectEncoding"/>
+				<type name="Responder"/>
+				<type name="SharedObject"/>
+				<type name="SharedObjectFlushStatus"/>
+				<type name="Socket"/>
+				<type name="URLLoader"/>
+				<type name="URLLoaderDataFormat"/>
+				<type name="URLRequest"/>
+				<type name="URLRequestHeader"/>
+				<type name="URLRequestMethod"/>
+				<type name="URLStream"/>
+				<type name="URLVariables"/>
+				<type name="XMLSocket"/>
+			</package>
+			<package name="utils">
+				<type name="clearInterval"/>
+				<type name="clearTimeout"/>
+				<type name="describeType"/>
+				<type name="escapeMultiByte"/>
+				<type name="getDefinitionByName"/>
+				<type name="getQualifiedClassName"/>
+				<type name="getQualifiedSuperclassName"/>
+				<type name="getTimer"/>
+				<type name="setInterval"/>
+				<type name="setTimeout"/>
+				<type name="unescapeMultiByte"/>
+				
+				<type name="ByteArray"/>
+				<type name="Dictionary"/>
+				<type name="Endian"/>
+				<type name="Proxy"/>
+				<type name="Timer"/>
+			</package>
+		</package>
+	</packages>
+	<examples>
+		<example name="Scope Object">
+			<script src="scripts/scope.js"/>
+			<description><![CDATA[The scope for the executing script (the value of 'this') can be defined via the <b>ScriptContext</b> class. If no scope is defined, the script is executed in the scope of the global object.<br/><br/>This can be tested in the demo by toggling the <b>Use stage for scope (this)</b> checkbox between compiliations.]]></description>
+		</example>
+		<example name="Object Proxies">
+			<script src="scripts/proxies.js"/>
+			<description><![CDATA[Object proxies can be used to manage references created between the executing script and objects in the main movie. Their objective is to make sure executed scripts can still effectively be garbage collected. Since all proxied objects are an instance of <i>ESObject</i>, some scripts may not run as expected.<br/><br/>This option can be disabled in the demo by toggling the <b>Use object proxies</b> checkbox between compilations.<br/><br/>Proxied objects can be identified by the triple curly braces in their toString() output.]]></description>
+		</example>
+		<example name="Exposing Classes/Functions">
+			<script src="scripts/exposed-dict.js"/>
+			<expose type="flash.utils.Dictionary"/>
+			<description><![CDATA[The compiler doesn't support packages or imports and scripts run in their own AplicationDomain by default. Any classes or functions that aren't top-level must be added to the ScriptDomain. Any definition that is added to the ScriptDomain must be referenced by its qualified name (ex. new flash.utils.Dictionary()).]]></description>
+		</example>
+		<example name="Exposing Classes/Functions (2)">
+			<script src="scripts/exposed-describe.js"/>
+			<expose type="flash.utils.describeType"/>
+			<expose type="flash.utils.getDefinitionByName"/>
+			<description><![CDATA[This is a second example showing support for exposing functions by exposing flash.utils.describeType to the script context.]]></description>
+		</example>
+		<example name="Prototype Object">
+			<script src="scripts/prototype.js"/>
+			<description><![CDATA[This example shows support for prototype-based programming.]]></description>
+		</example>
+		<example name="Test: MD5 JavaScript">
+			<script src="scripts/md5.js"/>
+			<description><![CDATA[This example demonstrates successful execution of a third-party script.]]></description>
+		</example>
+		<example name="Test: Roman Numeral JavaScript">
+			<script src="scripts/romannumerals.js"/>
+			<description><![CDATA[This example demonstrates successful execution of a third-party script.]]></description>
+		</example>
+	</examples>
+</demo>

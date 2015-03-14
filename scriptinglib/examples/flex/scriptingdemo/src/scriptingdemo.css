@@ -1,0 +1,50 @@
+@font-face
+{
+	src: local("Monaco");
+	font-family: Code;
+	font-weight: normal;
+}
+
+@font-face
+{
+	src: local("Helvetica");
+	font-family: Console;
+	font-weight: normal;
+}
+
+Application
+{
+	padding-left: 4px;
+	padding-right: 4px;
+	padding-top: 4px;
+	padding-bottom: 4px;
+}
+
+.scriptTextArea
+{
+	font-family: Code;
+	font-size: 12;
+}
+
+.consoleTextArea
+{
+	font-family: Console;
+	font-size: 12;
+}
+
+.tabbedPanel
+{
+	headerHeight: 10px;
+}
+
+.panelTabs
+{
+	padding-top: 0px;
+}
+
+.promptButton
+{
+	color: #FFFFFF;
+	fillColors: #009900, #00CC00;
+	fillAlphas: .8, .8;
+}
