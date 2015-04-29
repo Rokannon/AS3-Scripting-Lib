@@ -67,7 +67,9 @@ package com.newgonzo.scripting.ecma
             compilerLoader.contentLoaderInfo.addEventListener(Event.COMPLETE, escLoaded, false, 0, true);
 
             var swfBytes:ByteArray = ESC.swfBytes;
-            compilerLoader.loadBytes(swfBytes, new LoaderContext(false, new ApplicationDomain()));
+            var loaderContext:LoaderContext = new LoaderContext(false, new ApplicationDomain());
+            loaderContext.allowCodeImport = true;
+            compilerLoader.loadBytes(swfBytes, loaderContext);
         }
 
         private function escLoaded(event:Event):void

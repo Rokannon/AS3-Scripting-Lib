@@ -97,6 +97,7 @@ package com.newgonzo.scripting.ecma
                 // to keep it eligible for garbage collection
                 var context:LoaderContext = new LoaderContext(false,
                                                               new ApplicationDomain(scriptContext.domain.applicationDomain));
+                context.allowCodeImport = true;
                 loadedScript = new Loader();
                 loadedScript.loadBytes(bytes, context);
                 loadedScript.contentLoaderInfo.addEventListener(Event.COMPLETE, scriptLoaded, false, 0, true);
