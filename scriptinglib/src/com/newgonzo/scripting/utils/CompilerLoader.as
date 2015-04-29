@@ -39,7 +39,7 @@ package com.newgonzo.scripting.utils
             loader = new Loader();
             loader.addEventListener(CompilerEvent.INIT, compilerInit, false, 0, true);
             loader.load(new URLRequest(url),
-                        new LoaderContext(false, new ApplicationDomain(ApplicationDomain.currentDomain)));
+                new LoaderContext(false, new ApplicationDomain(ApplicationDomain.currentDomain)));
         }
 
         private function compilerInit(event:CompilerEvent):void

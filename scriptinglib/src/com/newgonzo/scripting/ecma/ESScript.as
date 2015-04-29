@@ -96,7 +96,7 @@ package com.newgonzo.scripting.ecma
                 // loaded script executes in its own ApplicationDomain
                 // to keep it eligible for garbage collection
                 var context:LoaderContext = new LoaderContext(false,
-                                                              new ApplicationDomain(scriptContext.domain.applicationDomain));
+                    new ApplicationDomain(scriptContext.domain.applicationDomain));
                 context.allowCodeImport = true;
                 loadedScript = new Loader();
                 loadedScript.loadBytes(bytes, context);

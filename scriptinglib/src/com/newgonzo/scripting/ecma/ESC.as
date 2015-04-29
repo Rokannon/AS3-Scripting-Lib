@@ -1,10 +1,10 @@
 package com.newgonzo.scripting.ecma
 {
-	import com.newgonzo.scripting.utils.SWFFormat;
+    import com.newgonzo.scripting.utils.SWFFormat;
 
-	import flash.utils.ByteArray;
+    import flash.utils.ByteArray;
 
-	public class ESC
+    public class ESC
     {
         [Embed(source="/../abc/debug.es.abc", mimeType="application/octet-stream")]
         private static const debug_abc:Class;
